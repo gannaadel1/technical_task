@@ -4,8 +4,9 @@ use App\Http\Controllers\ProductController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\StripeController;
 use Illuminate\Support\Facades\Route;
-
+use App\Http\Controllers\Admin\AdminProductController;
 use App\Http\Controllers\WebhookController;
+use App\Http\Controllers\WebProductController;
 
 /*
 |--------------------------------------------------------------------------
@@ -34,11 +35,13 @@ Route::middleware('auth')->group(function () {
 });
 
 Route::middleware(['auth', 'admin'])->group(function () {
-    Route::put('/products/{product}', [ProductController::class, 'update']);
-    Route::delete('/products/{product}', [ProductController::class, 'destroy']);
+    Route::get('/admin/products', [AdminProductController::class, 'index'])->name('Admin.admin');
+     Route::get('/admin/products/{product}/edit', [AdminProductController::class, 'edit'])->name('admin.products.edit');
+     Route::put('/admin/products/{product}', [AdminProductController::class, 'update'])->name('admin.products.update');
+    Route::delete('/admin/products/{product}', [AdminProductController::class, 'destroy'])->name('admin.products.destroy');
 });
 
-Route::prefix('product')->controller(ProductController::class)->group(function(){
+Route::prefix('products')->controller(WebProductController::class)->group(function(){
     Route::get('/' , 'index');
     Route::get('newProduct/create' , 'create')->name('product.create') ; 
     Route::post('newProduct/store' , 'store')->name('product.store') ;  
@@ -46,7 +49,7 @@ Route::prefix('product')->controller(ProductController::class)->group(function()
 });
 
 Route::get('/payment', [StripeController::class, 'index'])->name('payment.index');
-Route::post('/payment', [StripeController::class, 'processPayment'])->name('payment.process');
+Route::post('/processPayment', [StripeController::class, 'processPayment'])->name('payment.process');
 
 
 Route::post('/webhook', [WebhookController::class, 'handleWebhook']);

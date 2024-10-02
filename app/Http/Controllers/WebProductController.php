@@ -19,14 +19,23 @@ class WebProductController extends Controller
     }
 
     public function store(Request $request)
-    {   
+    {
+        $request->validate([
+            'name' => 'required',
+            'price' => 'required|numeric',
+            'quantity' => 'required|integer', 
+            'category_id' => 'required|integer', 
+        ]);
+    
+        
         Product::create([
-            'name' => $request->name ,
-            'price' => $request->price ,
-            'quantity' => $request->quantity ,
-        ]) ; 
-        return redirect()->back()->with('success','New Product Added Successfully');
-            
-
+            'name' => $request->name,
+            'price' => $request->price,
+            'quantity' => $request->quantity,
+            'category_id' => $request->category_id,
+        ]);
+    
+        return redirect()->back()->with('success', 'New Product Added Successfully');
     }
+    
 }

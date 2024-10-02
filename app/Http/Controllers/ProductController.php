@@ -21,4 +21,27 @@ class ProductController extends Controller
 
         return $this->apiResponse($products , 'Products retrieved Successfully' , 200) ;
     }
+
+
+        public function store(Request $request)
+{
+    
+    $request->validate([
+        'name' => 'required|string|max:255',
+        'price' => 'required|numeric',
+        'quantity' => 'required|integer|min:0',
+        'category_id' => 'required|integer',
+    ]);
+
+    
+    $product = Product::create([
+        'name' => $request->name,
+        'price' => $request->price,
+        'quantity' => $request->quantity,
+        'category_id' => $request->category_id,
+    ]);
+
+   
+    return response()->json($product, 201);
 }
+    }
